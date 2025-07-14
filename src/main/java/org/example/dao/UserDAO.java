@@ -1,21 +1,19 @@
 package org.example.dao;
 
 import org.example.entity.User;
+
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * The Data Access Object interface for User-related database operations.
- * It defines the contract for what operations can be performed, abstracting
- * the underlying implementation details.
+ * The generateNextId method has been removed as it is no longer used.
  */
 public interface UserDAO {
-
-    /**
-     * Finds a user by their username and password.
-     * @param username The username to search for.
-     * @param password The password to match.
-     * @return A User object if a match is found, otherwise null.
-     * @throws SQLException if a database access error occurs.
-     */
+    boolean save(User user) throws SQLException;
+    boolean update(User user) throws SQLException;
+    boolean delete(String userId) throws SQLException;
+    User findById(String userId) throws SQLException;
+    List<User> findAll() throws SQLException;
     User findByUsernameAndPassword(String username, String password) throws SQLException;
 }
