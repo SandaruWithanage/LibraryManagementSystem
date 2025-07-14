@@ -13,7 +13,8 @@ import java.util.Objects;
  * The main entry point for the Library Management System application.
  * This class is responsible for initializing the JavaFX toolkit and loading the initial user interface.
  */
-public class AppInitializer extends Application {
+public class
+AppInitializer extends Application {
 
     /**
      * This is the main entry point for all JavaFX applications.
