@@ -1,0 +1,105 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.example</groupId>
+    <artifactId>library-management-system</artifactId>
+    <version>1.0.0</version>
+
+    <!-- Project Properties: Centralizes version numbers for easy updates -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>22</java.version>
+        <javafx.version>22.0.2</javafx.version>
+        <hibernate.version>6.5.2.Final</hibernate.version>
+        <jfoenix.version>9.0.10</jfoenix.version>
+        <mysql.connector.version>8.4.0</mysql.connector.version>
+        <lombok.version>1.18.32</lombok.version>
+    </properties>
+
+    <!-- Project Dependencies: All external libraries required by the project -->
+    <dependencies>
+        <!-- JavaFX Modules for UI -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+
+        <!-- JFoenix for Material Design UI components -->
+        <dependency>
+            <groupId>com.jfoenix</groupId>
+            <artifactId>jfoenix</artifactId>
+            <version>${jfoenix.version}</version>
+        </dependency>
+
+        <!-- Hibernate ORM for database interaction -->
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+
+        <!-- MySQL Database Connector -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>${mysql.connector.version}</version>
+        </dependency>
+
+        <!-- Jakarta Persistence API (JPA) - Required by Hibernate -->
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+
+        <!-- Lombok for reducing boilerplate code (getters, setters, etc.) -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <!-- Build Configuration: Defines how Maven builds the project -->
+    <build>
+        <plugins>
+            <!-- Maven Compiler Plugin: Configures the Java version for compilation -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+
+            <!-- JavaFX Maven Plugin: Manages running the JavaFX application -->
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <configuration>
+                    <mainClass>org.example.AppInitializer</mainClass>
+                    <!-- CRITICAL FIX: Add JVM arguments to open JavaFX internals to JFoenix -->
+                    <options>
+                        <option>--add-opens</option>
+                        <option>javafx.controls/com.sun.javafx.scene.control.skin=com.jfoenix</option>
+                        <option>--add-opens</option>
+                        <option>javafx.controls/com.sun.javafx.scene.control=com.jfoenix</option>
+                    </options>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

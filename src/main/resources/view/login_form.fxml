@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<!--
+  This version uses standard JavaFX controls to bypass JFoenix compatibility issues.
+-->
+<AnchorPane prefHeight="450.0" prefWidth="400.0" style="-fx-background-color: #f4f7f6;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controller.LoginFormController">
+    <children>
+        <VBox alignment="CENTER" layoutX="50.0" layoutY="57.0" prefHeight="336.0" prefWidth="300.0" spacing="25.0" AnchorPane.bottomAnchor="57.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="57.0">
+            <children>
+                <Label text="User Login">
+                    <font>
+                        <Font name="System Bold" size="28.0" />
+                    </font>
+                </Label>
+
+                <!-- Standard TextField -->
+                <TextField fx:id="txtUsername" promptText="Username" />
+
+                <!-- Standard PasswordField -->
+                <PasswordField fx:id="txtPassword" promptText="Password" />
+
+                <!-- Standard Button -->
+                <Button fx:id="btnLogin" onAction="#btnLoginOnAction" prefHeight="40.0" prefWidth="300.0" style="-fx-background-color: #2980b9; -fx-text-fill: white;" text="Login">
+                    <font>
+                        <Font name="System Bold" size="14.0" />
+                    </font>
+                    <VBox.margin>
+                        <Insets top="15.0" />
+                    </VBox.margin>
+                </Button>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>
