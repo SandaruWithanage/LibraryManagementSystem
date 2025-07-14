@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="640.0" prefWidth="950.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controller.UserFormController">
+    <children>
+        <Label layoutX="30.0" layoutY="20.0" text="User Management">
+            <font>
+                <Font name="System Bold" size="24.0" />
+            </font>
+        </Label>
+
+        <!-- Form Fields for User Data -->
+        <VBox layoutX="30.0" layoutY="70.0" prefWidth="400.0" spacing="15.0">
+            <children>
+                <TextField fx:id="txtUserId" promptText="User ID" />
+                <TextField fx:id="txtName" promptText="Full Name" />
+                <TextField fx:id="txtContact" promptText="Contact (Email or Phone)" />
+                <DatePicker fx:id="dateMembership" prefWidth="400.0" promptText="Membership Date" />
+                <TextField fx:id="txtUsername" promptText="Username" />
+                <PasswordField fx:id="txtPassword" promptText="Password" />
+            </children>
+        </VBox>
+
+        <!-- Action Buttons -->
+        <HBox layoutX="30.0" layoutY="420.0" spacing="15.0">
+            <children>
+                <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#btnAddOnAction" style="-fx-background-color: #2980b9; -fx-text-fill: white;" text="Add User" />
+                <Button fx:id="btnUpdate" mnemonicParsing="false" onAction="#btnUpdateOnAction" style="-fx-background-color: #27ae60; -fx-text-fill: white;" text="Update User" />
+                <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#btnDeleteOnAction" style="-fx-background-color: #c0392b; -fx-text-fill: white;" text="Delete User" />
+                <Button fx:id="btnClear" mnemonicParsing="false" onAction="#btnClearOnAction" text="Clear" />
+            </children>
+        </HBox>
+
+        <!-- Table for Displaying Users -->
+        <VBox layoutX="480.0" layoutY="70.0" prefHeight="540.0" prefWidth="440.0" spacing="10.0">
+            <children>
+                <TextField fx:id="txtSearch" promptText="Search by Name or User ID..." />
+                <TableView fx:id="tblUsers" prefHeight="500.0">
+                    <columns>
+                        <TableColumn fx:id="colUserId" prefWidth="80.0" text="User ID" />
+                        <TableColumn fx:id="colName" prefWidth="120.0" text="Name" />
+                        <TableColumn fx:id="colContact" prefWidth="120.0" text="Contact" />
+                        <!-- *** ADDED: The missing Username column *** -->
+                        <TableColumn fx:id="colUsername" prefWidth="120.0" text="Username" />
+                    </columns>
+                </TableView>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>
