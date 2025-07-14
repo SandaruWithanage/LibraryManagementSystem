@@ -52,6 +52,11 @@ public class BookServiceImpl implements BookService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public String generateNextBookId() throws SQLException {
+        return null;
+    }
+
     // Helper method to map a BookDTO to a Book entity
     private Book mapToEntity(BookDTO dto) {
         return new Book(

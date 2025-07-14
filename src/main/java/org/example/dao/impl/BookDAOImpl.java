@@ -99,4 +99,26 @@ public class BookDAOImpl implements BookDAO {
         }
         return books;
     }
+
+    /**
+     * Generates the next sequential Book ID.
+     * It queries for the highest book_id and increments the numeric part.
+     */
+    @Override
+    public String generateNextId() throws SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
+        String sql = "SELECT book_id FROM books ORDER BY book_id DESC LIMIT 1";
+        try (PreparedStatement pstm = connection.prepareStatement(sql);
+             ResultSet resultSet = pstm.executeQuery()) {
+
+            if (resultSet.next()) {
+                String lastId = resultSet.getString("book_id");
+                int num = Integer.parseInt(lastId.substring(1));
+                num++;
+                return String.format("B%03d", num);
+            } else {
+                return "B001";
+            }
+        }
+    }
 }

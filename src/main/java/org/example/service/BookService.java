@@ -15,4 +15,11 @@ public interface BookService {
     boolean deleteBook(String bookId) throws SQLException;
     BookDTO getBookById(String bookId) throws SQLException;
     List<BookDTO> getAllBooks() throws SQLException;
+
+    /**
+     * Gets the next available book ID from the data layer.
+     * @return The next book ID as a String.
+     * @throws SQLException if a database error occurs.
+     */
+    String generateNextBookId() throws SQLException;
 }

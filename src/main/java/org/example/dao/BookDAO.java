@@ -15,4 +15,11 @@ public interface BookDAO {
     boolean delete(String bookId) throws SQLException;
     Book findById(String bookId) throws SQLException;
     List<Book> findAll() throws SQLException;
+
+    /**
+     * Generates the next book ID based on the last one in the database.
+     * @return The next sequential book ID as a String (e.g., "B004").
+     * @throws SQLException if a database access error occurs.
+     */
+    String generateNextId() throws SQLException;
 }
