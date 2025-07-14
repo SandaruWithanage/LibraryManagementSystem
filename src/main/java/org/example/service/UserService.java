@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * The service layer interface for User-related business logic.
- * It defines the operations that the UI controllers can perform.
+ * The generateNextUserId method has been removed.
  */
 public interface UserService {
     boolean addUser(UserDTO userDTO) throws SQLException;
@@ -15,5 +15,4 @@ public interface UserService {
     boolean deleteUser(String userId) throws SQLException;
     UserDTO getUserById(String userId) throws SQLException;
     List<UserDTO> getAllUsers() throws SQLException;
-    String generateNextUserId() throws SQLException; // Assuming you might want this later
 }
