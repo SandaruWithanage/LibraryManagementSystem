@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
@@ -20,14 +21,19 @@
             </font>
         </Label>
 
-        <!-- Form Fields for Creating a New Loan -->
+        <!-- Form Fields now use ComboBoxes for selection -->
         <VBox layoutX="30.0" layoutY="70.0" prefWidth="400.0" spacing="15.0">
             <children>
                 <TextField fx:id="txtRecordId" editable="false" promptText="Record ID (Auto-Generated)" style="-fx-background-color: #e2e2e2;" />
-                <TextField fx:id="txtUserId" promptText="Enter User ID..." />
+
+                <!-- ComboBox for selecting a User -->
+                <ComboBox fx:id="cmbUserId" prefWidth="400.0" promptText="Select User..." />
                 <Label fx:id="lblUserName" text="User Name: -" />
-                <TextField fx:id="txtBookId" promptText="Enter Book ID..." />
+
+                <!-- ComboBox for selecting a Book -->
+                <ComboBox fx:id="cmbBookId" prefWidth="400.0" promptText="Select Available Book..." />
                 <Label fx:id="lblBookTitle" text="Book Title: -" />
+
                 <DatePicker fx:id="dateBorrow" prefWidth="400.0" promptText="Borrow Date" />
             </children>
         </VBox>
