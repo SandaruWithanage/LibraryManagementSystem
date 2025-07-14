@@ -11,12 +11,35 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The concrete implementation of the BookDAO interface using JDBC.
- * The generateNextId method has been removed.
- */
 public class BookDAOImpl implements BookDAO {
 
+    // ... (All existing save, update, delete, findById, findAll methods remain here) ...
+
+    /**
+     * New method to fetch only available books from the database.
+     */
+    @Override
+    public List<Book> findAvailableBooks() throws SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
+        String sql = "SELECT * FROM books WHERE availability = true";
+        List<Book> books = new ArrayList<>();
+        try (PreparedStatement pstm = connection.prepareStatement(sql);
+             ResultSet resultSet = pstm.executeQuery()) {
+            while (resultSet.next()) {
+                books.add(new Book(
+                        resultSet.getString("book_id"),
+                        resultSet.getString("isbn"),
+                        resultSet.getString("title"),
+                        resultSet.getString("author"),
+                        resultSet.getString("genre"),
+                        resultSet.getBoolean("availability")
+                ));
+            }
+        }
+        return books;
+    }
+
+    // --- All other methods from the previous version remain unchanged ---
     @Override
     public boolean save(Book book) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
