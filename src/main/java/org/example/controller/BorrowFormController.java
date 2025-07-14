@@ -5,12 +5,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.StringConverter;
 import org.example.dto.BookDTO;
 import org.example.dto.BorrowRecordDTO;
 import org.example.dto.UserDTO;
@@ -28,15 +30,15 @@ import java.util.stream.Collectors;
 
 /**
  * Controller for the borrow_form.fxml view.
- * Handles the entire process of creating a new book loan.
+ * This version includes debugging print statements to trace the initialization process.
  */
 public class BorrowFormController {
 
     // FXML UI Components
     @FXML private TextField txtRecordId;
-    @FXML private TextField txtUserId;
+    @FXML private ComboBox<UserDTO> cmbUserId;
     @FXML private Label lblUserName;
-    @FXML private TextField txtBookId;
+    @FXML private ComboBox<BookDTO> cmbBookId;
     @FXML private Label lblBookTitle;
     @FXML private DatePicker dateBorrow;
     @FXML private Button btnConfirmBorrow;
@@ -46,143 +48,160 @@ public class BorrowFormController {
     @FXML private TableColumn<BorrowRecordDTO, String> colUserId;
     @FXML private TableColumn<BorrowRecordDTO, LocalDate> colBorrowDate;
 
-    // Service instances for all required modules
+    // Service instances
     private final BorrowService borrowService = new BorrowServiceImpl();
     private final BookService bookService = new BookServiceImpl();
     private final UserService userService = new UserServiceImpl();
 
-    private BookDTO selectedBook;
-    private UserDTO selectedUser;
-
     @FXML
     public void initialize() {
-        // Set up the table columns
+        System.out.println("[DEBUG] BorrowFormController: Starting initialize()...");
+        try {
+            // Configure table columns
+            configureTable();
+
+            // Load data and set up UI
+            loadCurrentlyBorrowed();
+            generateAndSetNextId();
+            loadUsersAndBooksIntoComboBoxes();
+            setupComboBoxListeners();
+
+            System.out.println("[DEBUG] BorrowFormController: initialize() completed successfully.");
+        } catch (Exception e) {
+            // If any part of the initialization fails, print the error.
+            System.err.println("[DEBUG] !!! FATAL ERROR during BorrowFormController initialize() !!!");
+            e.printStackTrace();
+        }
+    }
+
+    private void configureTable() {
+        System.out.println("[DEBUG] Configuring table columns...");
         colRecordId.setCellValueFactory(new PropertyValueFactory<>("recordId"));
         colBookId.setCellValueFactory(new PropertyValueFactory<>("bookId"));
         colUserId.setCellValueFactory(new PropertyValueFactory<>("userId"));
         colBorrowDate.setCellValueFactory(new PropertyValueFactory<>("borrowDate"));
-
-        // Load initial data and set up listeners
-        loadCurrentlyBorrowed();
-        generateAndSetNextId();
-        setupListeners();
+        System.out.println("[DEBUG] Table columns configured.");
     }
 
-    private void setupListeners() {
-        // When the user presses Enter in the User ID field, fetch the user's name.
-        txtUserId.setOnAction(event -> fetchUserDetails());
-        // When the user presses Enter in the Book ID field, fetch the book's title.
-        txtBookId.setOnAction(event -> fetchBookDetails());
-    }
-
-    private void fetchUserDetails() {
-        String userId = txtUserId.getText();
+    private void loadUsersAndBooksIntoComboBoxes() {
+        System.out.println("[DEBUG] Loading data into ComboBoxes...");
         try {
-            selectedUser = userService.getUserById(userId);
-            if (selectedUser != null) {
-                lblUserName.setText("User Name: " + selectedUser.getName());
-            } else {
-                lblUserName.setText("User Name: Not Found");
-                selectedUser = null;
-            }
+            List<UserDTO> allUsers = userService.getAllUsers();
+            cmbUserId.setItems(FXCollections.observableArrayList(allUsers));
+            System.out.println("[DEBUG] Loaded " + allUsers.size() + " users.");
+
+            List<BookDTO> availableBooks = bookService.getAvailableBooks();
+            cmbBookId.setItems(FXCollections.observableArrayList(availableBooks));
+            System.out.println("[DEBUG] Loaded " + availableBooks.size() + " available books.");
+
         } catch (SQLException e) {
             handleSQLException(e);
         }
-    }
 
-    private void fetchBookDetails() {
-        String bookId = txtBookId.getText();
-        try {
-            selectedBook = bookService.getBookById(bookId);
-            if (selectedBook != null) {
-                if (selectedBook.isAvailability()) {
-                    lblBookTitle.setText("Book Title: " + selectedBook.getTitle());
-                } else {
-                    lblBookTitle.setText("Book Title: Not Available");
-                    selectedBook = null; // Invalidate selection if book is not available
-                }
-            } else {
-                lblBookTitle.setText("Book Title: Not Found");
-                selectedBook = null;
+        cmbUserId.setConverter(new StringConverter<UserDTO>() {
+            @Override
+            public String toString(UserDTO user) {
+                return user == null ? "" : user.getUserId() + " - " + user.getName();
             }
-        } catch (SQLException e) {
-            handleSQLException(e);
-        }
+            @Override
+            public UserDTO fromString(String string) { return null; }
+        });
+
+        cmbBookId.setConverter(new StringConverter<BookDTO>() {
+            @Override
+            public String toString(BookDTO book) {
+                return book == null ? "" : book.getBookId() + " - " + book.getTitle();
+            }
+            @Override
+            public BookDTO fromString(String string) { return null; }
+        });
+        System.out.println("[DEBUG] ComboBoxes configured.");
     }
 
-    /**
-     * Handles the "Confirm Borrow" button click.
-     * Validates all inputs and processes the loan transaction.
-     */
+    private void setupComboBoxListeners() {
+        System.out.println("[DEBUG] Setting up ComboBox listeners...");
+        cmbUserId.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                lblUserName.setText("User Name: " + newVal.getName());
+            }
+        });
+
+        cmbBookId.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                lblBookTitle.setText("Book Title: " + newVal.getTitle());
+            }
+        });
+        System.out.println("[DEBUG] ComboBox listeners configured.");
+    }
+
     @FXML
     void btnConfirmBorrowOnAction(ActionEvent event) {
-        // 1. Validate all inputs
+        UserDTO selectedUser = cmbUserId.getSelectionModel().getSelectedItem();
+        BookDTO selectedBook = cmbBookId.getSelectionModel().getSelectedItem();
+
         if (selectedUser == null || selectedBook == null || dateBorrow.getValue() == null) {
-            showAlert(Alert.AlertType.WARNING, "Validation Error", "Please ensure a valid User, an available Book, and a Borrow Date are selected.");
+            showAlert(Alert.AlertType.WARNING, "Validation Error", "Please select a User, a Book, and a Borrow Date.");
             return;
         }
 
-        // 2. Create the DTO for the new borrow record
         BorrowRecordDTO newRecord = new BorrowRecordDTO(
                 txtRecordId.getText(),
                 selectedUser.getUserId(),
                 selectedBook.getBookId(),
                 dateBorrow.getValue(),
-                null, // Return date is null for a new loan
-                0.0 // Fine is 0 for a new loan
+                null, 0.0
         );
 
         try {
-            // 3. Call the transactional service method
             boolean success = borrowService.borrowBook(newRecord);
-
             if (success) {
                 showAlert(Alert.AlertType.INFORMATION, "Success", "Book borrowed successfully!");
                 refreshView();
             } else {
-                showAlert(Alert.AlertType.ERROR, "Transaction Failed", "The book could not be borrowed. The transaction was rolled back.");
+                showAlert(Alert.AlertType.ERROR, "Transaction Failed", "The book could not be borrowed.");
             }
         } catch (SQLException e) {
             handleSQLException(e);
         }
     }
 
-    // --- Helper Methods ---
-
     private void loadCurrentlyBorrowed() {
+        System.out.println("[DEBUG] Loading currently borrowed books...");
         try {
-            // Filter the list to show only books that have not been returned
             List<BorrowRecordDTO> currentlyBorrowed = borrowService.getAllBorrowRecords().stream()
                     .filter(record -> record.getReturnDate() == null)
                     .collect(Collectors.toList());
             tblBorrowedBooks.setItems(FXCollections.observableArrayList(currentlyBorrowed));
+            System.out.println("[DEBUG] Found " + currentlyBorrowed.size() + " borrowed books.");
         } catch (SQLException e) {
             handleSQLException(e);
         }
     }
 
     private void generateAndSetNextId() {
+        System.out.println("[DEBUG] Generating next record ID...");
         try {
-            txtRecordId.setText(borrowService.generateNextRecordId());
+            String nextId = borrowService.generateNextRecordId();
+            txtRecordId.setText(nextId);
+            System.out.println("[DEBUG] Next record ID is: " + nextId);
         } catch (SQLException e) {
             handleSQLException(e);
         }
     }
 
     private void clearForm() {
-        txtUserId.clear();
-        txtBookId.clear();
+        cmbUserId.getSelectionModel().clearSelection();
+        cmbBookId.getSelectionModel().clearSelection();
         lblUserName.setText("User Name: -");
         lblBookTitle.setText("Book Title: -");
         dateBorrow.setValue(null);
-        selectedUser = null;
-        selectedBook = null;
     }
 
     private void refreshView() {
         loadCurrentlyBorrowed();
         clearForm();
         generateAndSetNextId();
+        loadUsersAndBooksIntoComboBoxes();
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
