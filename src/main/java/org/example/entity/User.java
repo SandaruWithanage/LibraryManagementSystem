@@ -4,10 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 /**
- * Represents a User entity, mapping to the 'users' table in the database.
- * Lombok annotations are used to automatically generate getters, setters,
- * and constructors, reducing boilerplate code.
+ * Represents a User entity, directly mapping to the 'users' table in the database.
+ * This version includes all required fields for user management and login.
  */
 @Data
 @NoArgsConstructor
@@ -16,7 +17,7 @@ public class User {
     private String userId;
     private String name;
     private String contact;
-    private String membershipDate;
+    private LocalDate membershipDate;
     private String username;
     private String password;
 }
