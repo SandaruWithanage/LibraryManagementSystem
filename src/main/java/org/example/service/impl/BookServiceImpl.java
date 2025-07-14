@@ -10,14 +10,20 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * The concrete implementation of the BookService interface.
- * The generateNextBookId method has been removed.
- */
 public class BookServiceImpl implements BookService {
 
     private final BookDAO bookDAO = new BookDAOImpl();
 
+    // ... (All existing addBook, updateBook, etc. methods remain here) ...
+
+    @Override
+    public List<BookDTO> getAvailableBooks() throws SQLException {
+        return bookDAO.findAvailableBooks().stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+    // --- All other methods from the previous version remain unchanged ---
     @Override
     public boolean addBook(BookDTO bookDTO) throws SQLException {
         Book book = mapToEntity(bookDTO);
@@ -49,7 +55,6 @@ public class BookServiceImpl implements BookService {
                 .collect(Collectors.toList());
     }
 
-    // Helper method to map a BookDTO to a Book entity
     private Book mapToEntity(BookDTO dto) {
         return new Book(
                 dto.getBookId(),
@@ -61,7 +66,6 @@ public class BookServiceImpl implements BookService {
         );
     }
 
-    // Helper method to map a Book entity to a BookDTO
     private BookDTO mapToDTO(Book entity) {
         return new BookDTO(
                 entity.getBookId(),
