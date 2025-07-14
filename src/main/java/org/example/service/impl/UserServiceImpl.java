@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 /**
  * The concrete implementation of the UserService interface.
- * It coordinates data flow between the controller and the DAO.
+ * The generateNextUserId method has been removed.
  */
 public class UserServiceImpl implements UserService {
 
@@ -44,13 +44,6 @@ public class UserServiceImpl implements UserService {
         return userDAO.findAll().stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public String generateNextUserId() throws SQLException {
-        // This logic can be implemented in UserDAOImpl if needed, similar to books.
-        // For now, it's a placeholder.
-        return null;
     }
 
     // --- Helper mapping methods ---
