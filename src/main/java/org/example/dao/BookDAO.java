@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * The Data Access Object interface for Book-related database operations.
- * It defines the contract for CRUD (Create, Read, Update, Delete) operations.
+ * The generateNextId method has been removed as it's no longer used.
  */
 public interface BookDAO {
     boolean save(Book book) throws SQLException;
@@ -15,11 +15,4 @@ public interface BookDAO {
     boolean delete(String bookId) throws SQLException;
     Book findById(String bookId) throws SQLException;
     List<Book> findAll() throws SQLException;
-
-    /**
-     * Generates the next book ID based on the last one in the database.
-     * @return The next sequential book ID as a String (e.g., "B004").
-     * @throws SQLException if a database access error occurs.
-     */
-    String generateNextId() throws SQLException;
 }
