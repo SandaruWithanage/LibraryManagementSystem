@@ -25,7 +25,7 @@ public class DBConnection {
         String url = "jdbc:mysql://localhost:3306/library_db";
         Properties props = new Properties();
         props.setProperty("user", "root");
-        props.setProperty("password", ""); // <-- IMPORTANT: Set your MySQL password here
+        props.setProperty("password", "1234"); // <-- IMPORTANT: Set your MySQL password here
 
         // Establish the connection
         this.connection = DriverManager.getConnection(url, props);
