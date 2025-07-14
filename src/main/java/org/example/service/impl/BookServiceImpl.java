@@ -7,14 +7,12 @@ import org.example.entity.Book;
 import org.example.service.BookService;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * The concrete implementation of the BookService interface.
- * It uses the BookDAO to interact with the database and handles the mapping
- * between BookDTOs and Book entities.
+ * The generateNextBookId method has been removed.
  */
 public class BookServiceImpl implements BookService {
 
@@ -46,15 +44,9 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<BookDTO> getAllBooks() throws SQLException {
         List<Book> books = bookDAO.findAll();
-        // Using Java Streams for a more modern mapping approach
         return books.stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public String generateNextBookId() throws SQLException {
-        return null;
     }
 
     // Helper method to map a BookDTO to a Book entity
