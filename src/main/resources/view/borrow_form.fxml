@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="640.0" prefWidth="950.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controller.BorrowFormController">
+    <children>
+        <Label layoutX="30.0" layoutY="20.0" text="Borrow Management">
+            <font>
+                <Font name="System Bold" size="24.0" />
+            </font>
+        </Label>
+
+        <!-- Form Fields for Creating a New Loan -->
+        <VBox layoutX="30.0" layoutY="70.0" prefWidth="400.0" spacing="15.0">
+            <children>
+                <TextField fx:id="txtRecordId" editable="false" promptText="Record ID (Auto-Generated)" style="-fx-background-color: #e2e2e2;" />
+                <TextField fx:id="txtUserId" promptText="Enter User ID..." />
+                <Label fx:id="lblUserName" text="User Name: -" />
+                <TextField fx:id="txtBookId" promptText="Enter Book ID..." />
+                <Label fx:id="lblBookTitle" text="Book Title: -" />
+                <DatePicker fx:id="dateBorrow" prefWidth="400.0" promptText="Borrow Date" />
+            </children>
+        </VBox>
+
+        <!-- Action Button -->
+        <HBox layoutX="30.0" layoutY="380.0">
+            <children>
+                <Button fx:id="btnConfirmBorrow" mnemonicParsing="false" onAction="#btnConfirmBorrowOnAction" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #2980b9; -fx-text-fill: white;" text="Confirm Borrow" />
+            </children>
+        </HBox>
+
+        <!-- Table for Displaying Currently Borrowed Books -->
+        <VBox layoutX="480.0" layoutY="70.0" prefHeight="540.0" prefWidth="440.0" spacing="10.0">
+            <children>
+                <Label text="Currently Borrowed Books">
+                    <font>
+                        <Font name="System Semibold" size="16.0" />
+                    </font>
+                </Label>
+                <TableView fx:id="tblBorrowedBooks" prefHeight="500.0">
+                    <columns>
+                        <TableColumn fx:id="colRecordId" prefWidth="90.0" text="Record ID" />
+                        <TableColumn fx:id="colBookId" prefWidth="90.0" text="Book ID" />
+                        <TableColumn fx:id="colUserId" prefWidth="90.0" text="User ID" />
+                        <TableColumn fx:id="colBorrowDate" prefWidth="150.0" text="Borrow Date" />
+                    </columns>
+                </TableView>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>
