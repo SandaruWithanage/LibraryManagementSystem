@@ -23,8 +23,11 @@
                 <!-- Logo and Title -->
                 <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <!-- Make sure you have a logo.png file in resources/assets/images/ -->
-                        <Image url="@../assets/images/logo.png" />
+                        <!--
+                          FIXED: The image path has been updated to an absolute path
+                          from the resources root to ensure it loads correctly.
+                        -->
+                        <Image url="/view/assets/images/logo.png"/>
                     </image>
                     <VBox.margin>
                         <Insets bottom="10.0" top="30.0" />
