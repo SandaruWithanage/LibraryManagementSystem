@@ -11,8 +11,8 @@
 <?import javafx.scene.text.Font?>
 
 <!--
-  This FXML file defines the main dashboard layout using a BorderPane.
-  It features a navigation sidebar on the left and a content area in the center.
+  This is the final version of the dashboard layout.
+  It includes all navigation buttons, including "Reports".
 -->
 <BorderPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #ecf0f1;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controller.DashboardController">
 
@@ -23,11 +23,7 @@
                 <!-- Logo and Title -->
                 <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <!--
-                          FIXED: The image path has been updated to an absolute path
-                          from the resources root to ensure it loads correctly.
-                        -->
-                        <Image url="/view/assets/images/logo.png"/>
+                        <Image url="/view/assets/images/logo.png" />
                     </image>
                     <VBox.margin>
                         <Insets bottom="10.0" top="30.0" />
@@ -47,13 +43,16 @@
                 <JFXButton fx:id="btnUsers" onAction="#handleUsersClick" prefHeight="50.0" prefWidth="250.0" text="Users" textFill="WHITE" />
                 <JFXButton fx:id="btnBorrow" onAction="#handleBorrowClick" prefHeight="50.0" prefWidth="250.0" text="Borrow Records" textFill="WHITE" />
                 <JFXButton fx:id="btnReturns" onAction="#handleReturnsClick" prefHeight="50.0" prefWidth="250.0" text="Returns &amp; Fines" textFill="WHITE" />
+
+                <!-- *** ADDED: The "Reports" button *** -->
+                <JFXButton fx:id="btnReports" onAction="#handleReportsClick" prefHeight="50.0" prefWidth="250.0" text="Reports" textFill="WHITE" />
+
             </children>
         </VBox>
     </left>
 
     <!-- Main Content Area -->
     <center>
-        <!-- This StackPane acts as a placeholder. Other FXML views will be loaded into it. -->
         <StackPane fx:id="contentArea" style="-fx-background-color: #ffffff;" BorderPane.alignment="CENTER" />
     </center>
 </BorderPane>
