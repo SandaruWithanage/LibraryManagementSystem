@@ -10,14 +10,16 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * The concrete implementation of the UserService interface.
- * The generateNextUserId method has been removed.
- */
 public class UserServiceImpl implements UserService {
 
     private final UserDAO userDAO = new UserDAOImpl();
 
+    @Override
+    public String generateNextUserId() throws SQLException {
+        return userDAO.generateNextId();
+    }
+
+    // --- All other methods remain unchanged ---
     @Override
     public boolean addUser(UserDTO userDTO) throws SQLException {
         return userDAO.save(mapToEntity(userDTO));
@@ -46,7 +48,6 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-    // --- Helper mapping methods ---
     private User mapToEntity(UserDTO dto) {
         return new User(
                 dto.getUserId(),
