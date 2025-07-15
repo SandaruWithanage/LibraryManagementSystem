@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * The Data Access Object interface for User-related database operations.
- * The generateNextId method has been removed as it is no longer used.
+ * This version includes the method for auto-generating User IDs.
  */
 public interface UserDAO {
     boolean save(User user) throws SQLException;
@@ -16,4 +16,6 @@ public interface UserDAO {
     User findById(String userId) throws SQLException;
     List<User> findAll() throws SQLException;
     User findByUsernameAndPassword(String username, String password) throws SQLException;
+
+    String generateNextId() throws SQLException;
 }
