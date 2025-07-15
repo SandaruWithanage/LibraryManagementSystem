@@ -52,8 +52,9 @@
                         <TableColumn fx:id="colUserId" prefWidth="80.0" text="User ID" />
                         <TableColumn fx:id="colName" prefWidth="120.0" text="Name" />
                         <TableColumn fx:id="colContact" prefWidth="120.0" text="Contact" />
-                        <!-- *** ADDED: The missing Username column *** -->
                         <TableColumn fx:id="colUsername" prefWidth="120.0" text="Username" />
+                        <!-- *** FIXED: Added the missing Membership Date column *** -->
+                        <TableColumn fx:id="colMembershipDate" prefWidth="125.0" text="Member Since" />
                     </columns>
                 </TableView>
             </children>
