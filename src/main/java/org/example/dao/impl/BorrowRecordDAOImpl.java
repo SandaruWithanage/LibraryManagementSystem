@@ -15,36 +15,14 @@ import java.util.List;
 
 /**
  * The concrete implementation of the BorrowRecordDAO interface.
- * This version includes the logic to count active loans.
+ * This version is updated to handle the 'is_fine_paid' column.
  */
 public class BorrowRecordDAOImpl implements BorrowRecordDAO {
 
-    // --- All existing save, update, findById, findAll, generateNextId methods remain here ---
-
-    /**
-     * New method to count active loans for a specific user.
-     */
-    @Override
-    public int getActiveBorrowCountForUser(String userId) throws SQLException {
-        Connection connection = DBConnection.getInstance().getConnection();
-        // This query counts all records for a user where the book has not been returned.
-        String sql = "SELECT COUNT(*) FROM borrow_records WHERE user_id = ? AND return_date IS NULL";
-        try (PreparedStatement pstm = connection.prepareStatement(sql)) {
-            pstm.setString(1, userId);
-            try (ResultSet resultSet = pstm.executeQuery()) {
-                if (resultSet.next()) {
-                    return resultSet.getInt(1); // Return the count
-                }
-            }
-        }
-        return 0; // Return 0 if user has no active loans
-    }
-
-    // --- All other methods from the previous version remain unchanged ---
     @Override
     public boolean save(BorrowRecord record) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
-        String sql = "INSERT INTO borrow_records (record_id, user_id, book_id, borrow_date, return_date, fine) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO borrow_records (record_id, user_id, book_id, borrow_date, return_date, fine, is_fine_paid) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstm = connection.prepareStatement(sql)) {
             pstm.setString(1, record.getRecordId());
             pstm.setString(2, record.getUserId());
@@ -52,6 +30,7 @@ public class BorrowRecordDAOImpl implements BorrowRecordDAO {
             pstm.setDate(4, Date.valueOf(record.getBorrowDate()));
             pstm.setDate(5, record.getReturnDate() != null ? Date.valueOf(record.getReturnDate()) : null);
             pstm.setDouble(6, record.getFine());
+            pstm.setBoolean(7, record.isFinePaid()); // Set the new field
             return pstm.executeUpdate() > 0;
         }
     }
@@ -59,16 +38,34 @@ public class BorrowRecordDAOImpl implements BorrowRecordDAO {
     @Override
     public boolean update(BorrowRecord record) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
-        String sql = "UPDATE borrow_records SET user_id = ?, book_id = ?, borrow_date = ?, return_date = ?, fine = ? WHERE record_id = ?";
+        String sql = "UPDATE borrow_records SET user_id = ?, book_id = ?, borrow_date = ?, return_date = ?, fine = ?, is_fine_paid = ? WHERE record_id = ?";
         try (PreparedStatement pstm = connection.prepareStatement(sql)) {
             pstm.setString(1, record.getUserId());
             pstm.setString(2, record.getBookId());
             pstm.setDate(3, Date.valueOf(record.getBorrowDate()));
             pstm.setDate(4, record.getReturnDate() != null ? Date.valueOf(record.getReturnDate()) : null);
             pstm.setDouble(5, record.getFine());
-            pstm.setString(6, record.getRecordId());
+            pstm.setBoolean(6, record.isFinePaid()); // Set the new field
+            pstm.setString(7, record.getRecordId());
             return pstm.executeUpdate() > 0;
         }
+    }
+
+    // --- Other methods remain unchanged, but their helper method is updated ---
+
+    @Override
+    public int getActiveBorrowCountForUser(String userId) throws SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
+        String sql = "SELECT COUNT(*) FROM borrow_records WHERE user_id = ? AND return_date IS NULL";
+        try (PreparedStatement pstm = connection.prepareStatement(sql)) {
+            pstm.setString(1, userId);
+            try (ResultSet resultSet = pstm.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1);
+                }
+            }
+        }
+        return 0;
     }
 
     @Override
@@ -110,13 +107,17 @@ public class BorrowRecordDAOImpl implements BorrowRecordDAO {
                 String lastId = resultSet.getString(1);
                 int num = Integer.parseInt(lastId.substring(1));
                 num++;
-                return String.format("R%03d", num); // "R" for Record
+                return String.format("R%03d", num);
             } else {
                 return "R001";
             }
         }
     }
 
+    /**
+     * Helper method to build a BorrowRecord object from a ResultSet row.
+     * This now includes reading the 'is_fine_paid' column.
+     */
     private BorrowRecord buildBorrowRecordFromResultSet(ResultSet resultSet) throws SQLException {
         Date sqlReturnDate = resultSet.getDate("return_date");
         LocalDate returnDate = (sqlReturnDate != null) ? sqlReturnDate.toLocalDate() : null;
@@ -127,7 +128,8 @@ public class BorrowRecordDAOImpl implements BorrowRecordDAO {
                 resultSet.getString("book_id"),
                 resultSet.getDate("borrow_date").toLocalDate(),
                 returnDate,
-                resultSet.getDouble("fine")
+                resultSet.getDouble("fine"),
+                resultSet.getBoolean("is_fine_paid") // Read the new field
         );
     }
 }
