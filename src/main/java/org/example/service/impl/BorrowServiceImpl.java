@@ -35,8 +35,7 @@ public class BorrowServiceImpl implements BorrowService {
         // First, check if the user has already reached their borrowing limit.
         int activeBorrows = borrowRecordDAO.getActiveBorrowCountForUser(borrowRecordDTO.getUserId());
         if (activeBorrows >= BORROWING_LIMIT) {
-            // If the limit is reached, stop the process immediately.
-            System.err.println("User " + borrowRecordDTO.getUserId() + " has reached the borrowing limit.");
+            // If the limit is reached, return false so the controller can show a specific error.
             return false;
         }
 
@@ -56,8 +55,8 @@ public class BorrowServiceImpl implements BorrowService {
 
             // Update the book's availability to false.
             Book book = bookDAO.findById(borrowRecordDTO.getBookId());
-            if (book == null) {
-                connection.rollback();
+            if (book == null || !book.isAvailability()) {
+                connection.rollback(); // Book not found or already borrowed
                 return false;
             }
             book.setAvailability(false);
@@ -103,7 +102,8 @@ public class BorrowServiceImpl implements BorrowService {
                 dto.getBookId(),
                 dto.getBorrowDate(),
                 dto.getReturnDate(),
-                dto.getFine()
+                dto.getFine(),
+                dto.isFinePaid()
         );
     }
 
@@ -114,7 +114,8 @@ public class BorrowServiceImpl implements BorrowService {
                 entity.getBookId(),
                 entity.getBorrowDate(),
                 entity.getReturnDate(),
-                entity.getFine()
+                entity.getFine(),
+                entity.isFinePaid()
         );
     }
 }
