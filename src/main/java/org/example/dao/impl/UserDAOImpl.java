@@ -15,10 +15,29 @@ import java.util.List;
 
 /**
  * The concrete implementation of the UserDAO interface.
- * The generateNextId method has been removed.
+ * This version includes the robust logic to generate the next User ID.
  */
 public class UserDAOImpl implements UserDAO {
 
+    @Override
+    public String generateNextId() throws SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
+        // This robust query correctly sorts alphanumeric IDs (e.g., U009, U010, U011)
+        String sql = "SELECT user_id FROM users ORDER BY CAST(SUBSTRING(user_id, 2) AS UNSIGNED) DESC LIMIT 1";
+        try (PreparedStatement pstm = connection.prepareStatement(sql)) {
+            ResultSet resultSet = pstm.executeQuery();
+            if (resultSet.next()) {
+                String lastId = resultSet.getString(1);
+                int num = Integer.parseInt(lastId.substring(1));
+                num++;
+                return String.format("U%03d", num); // Formats to U002, U010, etc.
+            } else {
+                return "U001"; // If the table is empty
+            }
+        }
+    }
+
+    // --- All other CRUD and find methods remain unchanged ---
     @Override
     public boolean save(User user) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
