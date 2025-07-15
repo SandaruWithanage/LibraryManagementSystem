@@ -14,55 +14,55 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import org.example.dto.BorrowRecordDTO;
 import org.example.dto.ReturnDTO;
 import org.example.service.BorrowService;
+import org.example.service.FineService;
 import org.example.service.ReturnService;
 import org.example.service.impl.BorrowServiceImpl;
+import org.example.service.impl.FineServiceImpl;
 import org.example.service.impl.ReturnServiceImpl;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Controller for the return_form.fxml view.
- * Handles the logic for processing book returns and calculating fines.
+ * Handles the logic for processing book returns and managing fine payments.
  */
 public class ReturnFormController {
 
     // FXML UI Components
-    @FXML private TableView<BorrowRecordDTO> tblBorrowedBooks;
+    @FXML private TableView<BorrowRecordDTO> tblBorrowRecords;
     @FXML private TableColumn<BorrowRecordDTO, String> colRecordId;
     @FXML private TableColumn<BorrowRecordDTO, String> colBookId;
     @FXML private TableColumn<BorrowRecordDTO, String> colUserId;
     @FXML private TableColumn<BorrowRecordDTO, LocalDate> colBorrowDate;
+    @FXML private TableColumn<BorrowRecordDTO, LocalDate> colReturnDate;
+    @FXML private TableColumn<BorrowRecordDTO, Double> colFine;
     @FXML private DatePicker dateReturn;
     @FXML private TextField txtFine;
     @FXML private Button btnConfirmReturn;
+    @FXML private Button btnPayFine; // The new button
 
     // Service instances
     private final BorrowService borrowService = new BorrowServiceImpl();
     private final ReturnService returnService = new ReturnServiceImpl();
+    private final FineService fineService = new FineServiceImpl(); // The new service
 
-    private ObservableList<BorrowRecordDTO> borrowedList;
+    private ObservableList<BorrowRecordDTO> recordList;
 
-    /**
-     * Initializes the controller, setting up the table and listeners.
-     */
     @FXML
     public void initialize() {
-        // The fine field is for display only
         txtFine.setEditable(false);
         txtFine.setStyle("-fx-background-color: #e2e2e2;");
 
-        // Set up table columns
         configureTable();
-
-        // Load initial data
-        loadBorrowedRecords();
-
-        // Add a listener to handle row selection
+        loadAllRecords();
         setupListeners();
+
+        // Initially disable buttons until a selection is made
+        btnConfirmReturn.setDisable(true);
+        btnPayFine.setDisable(true);
     }
 
     private void configureTable() {
@@ -70,26 +70,25 @@ public class ReturnFormController {
         colBookId.setCellValueFactory(new PropertyValueFactory<>("bookId"));
         colUserId.setCellValueFactory(new PropertyValueFactory<>("userId"));
         colBorrowDate.setCellValueFactory(new PropertyValueFactory<>("borrowDate"));
+        colReturnDate.setCellValueFactory(new PropertyValueFactory<>("returnDate"));
+        colFine.setCellValueFactory(new PropertyValueFactory<>("fine"));
     }
 
     private void setupListeners() {
-        // When a record is selected in the table, prepare the return form.
-        tblBorrowedBooks.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+        // When a record is selected, update the form and button states.
+        tblBorrowRecords.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                // Default the return date to today and calculate the fine.
-                dateReturn.setValue(LocalDate.now());
-                calculateAndDisplayFine(newSelection, LocalDate.now());
+                updateFormForSelection(newSelection);
             } else {
-                // If no row is selected, clear the form.
-                clearReturnForm();
+                clearForm();
             }
         });
 
         // When the return date is changed, recalculate the fine.
         dateReturn.valueProperty().addListener((obs, oldDate, newDate) -> {
-            BorrowRecordDTO selectedRecord = tblBorrowedBooks.getSelectionModel().getSelectedItem();
+            BorrowRecordDTO selectedRecord = tblBorrowRecords.getSelectionModel().getSelectedItem();
             if (selectedRecord != null && newDate != null) {
-                calculateAndDisplayFine(selectedRecord, newDate);
+                calculateAndDisplayFine(selectedRecord.getBorrowDate(), newDate);
             }
         });
     }
@@ -99,28 +98,24 @@ public class ReturnFormController {
      */
     @FXML
     void btnConfirmReturnOnAction(ActionEvent event) {
-        BorrowRecordDTO selectedRecord = tblBorrowedBooks.getSelectionModel().getSelectedItem();
+        BorrowRecordDTO selectedRecord = tblBorrowRecords.getSelectionModel().getSelectedItem();
         LocalDate returnDate = dateReturn.getValue();
 
-        // Validate that a record is selected and a return date is chosen.
         if (selectedRecord == null || returnDate == null) {
-            showAlert(Alert.AlertType.WARNING, "Validation Error", "Please select a borrowed record and a return date.");
+            showAlert(Alert.AlertType.WARNING, "Validation Error", "Please select a record and a return date.");
             return;
         }
 
-        // Create a DTO for the return process.
         ReturnDTO returnDTO = new ReturnDTO(
                 selectedRecord.getRecordId(),
                 selectedRecord.getBookId(),
                 selectedRecord.getBorrowDate(),
                 returnDate,
-                Double.parseDouble(txtFine.getText())
+                0 // Fine will be calculated by the service
         );
 
         try {
-            // Call the transactional service method to process the return.
             boolean success = returnService.processReturn(returnDTO);
-
             if (success) {
                 showAlert(Alert.AlertType.INFORMATION, "Success", "Book returned successfully!");
                 refreshView();
@@ -132,46 +127,82 @@ public class ReturnFormController {
         }
     }
 
-    // --- Helper Methods ---
+    /**
+     * Handles the "Mark as Paid" button click.
+     */
+    @FXML
+    void btnPayFineOnAction(ActionEvent event) {
+        BorrowRecordDTO selectedRecord = tblBorrowRecords.getSelectionModel().getSelectedItem();
+        if (selectedRecord == null) return;
 
-    private void loadBorrowedRecords() {
         try {
-            // Fetch all borrow records and filter for those not yet returned.
-            List<BorrowRecordDTO> allRecords = borrowService.getAllBorrowRecords();
-            List<BorrowRecordDTO> currentlyBorrowed = allRecords.stream()
-                    .filter(record -> record.getReturnDate() == null)
-                    .collect(Collectors.toList());
-
-            borrowedList = FXCollections.observableArrayList(currentlyBorrowed);
-            tblBorrowedBooks.setItems(borrowedList);
+            boolean success = fineService.payFine(selectedRecord.getRecordId());
+            if (success) {
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Fine marked as paid!");
+                refreshView();
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to update fine payment status.");
+            }
         } catch (SQLException e) {
             handleSQLException(e);
         }
     }
 
-    /**
-     * Calculates the fine and displays it in the text field.
-     * This logic is for UI display only; the final calculation is done in the service layer.
-     */
-    private void calculateAndDisplayFine(BorrowRecordDTO record, LocalDate returnDate) {
-        long daysBorrowed = ChronoUnit.DAYS.between(record.getBorrowDate(), returnDate);
-        if (daysBorrowed > 14) { // Assuming a 14-day lending period
+    // --- Helper Methods ---
+
+    private void loadAllRecords() {
+        try {
+            recordList = FXCollections.observableArrayList(borrowService.getAllBorrowRecords());
+            tblBorrowRecords.setItems(recordList);
+        } catch (SQLException e) {
+            handleSQLException(e);
+        }
+    }
+
+    private void updateFormForSelection(BorrowRecordDTO record) {
+        // If the book has not been returned yet
+        if (record.getReturnDate() == null) {
+            dateReturn.setValue(LocalDate.now());
+            calculateAndDisplayFine(record.getBorrowDate(), LocalDate.now());
+            btnConfirmReturn.setDisable(false);
+            btnPayFine.setDisable(true); // Can't pay a fine until it's officially recorded
+        } else {
+            // If the book has been returned
+            dateReturn.setValue(record.getReturnDate());
+            txtFine.setText(String.format("%.2f", record.getFine()));
+            btnConfirmReturn.setDisable(true); // Already returned
+
+            // Only enable the pay button if there is an unpaid fine
+            if (record.getFine() > 0 && !record.isFinePaid()) {
+                btnPayFine.setDisable(false);
+            } else {
+                btnPayFine.setDisable(true);
+            }
+        }
+    }
+
+    private void calculateAndDisplayFine(LocalDate borrowDate, LocalDate returnDate) {
+        long daysBorrowed = ChronoUnit.DAYS.between(borrowDate, returnDate);
+        if (daysBorrowed > 14) {
             long overdueDays = daysBorrowed - 14;
-            double fine = overdueDays * 10.0; // Assuming a fine of 10.0 per day
+            double fine = overdueDays * 10.0;
             txtFine.setText(String.format("%.2f", fine));
         } else {
             txtFine.setText("0.00");
         }
     }
 
-    private void clearReturnForm() {
+    private void clearForm() {
         dateReturn.setValue(null);
         txtFine.clear();
+        btnConfirmReturn.setDisable(true);
+        btnPayFine.setDisable(true);
+        tblBorrowRecords.getSelectionModel().clearSelection();
     }
 
     private void refreshView() {
-        loadBorrowedRecords();
-        clearReturnForm();
+        loadAllRecords();
+        clearForm();
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
