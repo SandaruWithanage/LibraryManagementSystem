@@ -17,13 +17,8 @@ import org.example.service.impl.BookServiceImpl;
 import java.sql.SQLException;
 import java.util.List;
 
-/**
- * Controller for the book_form.fxml view.
- * This version uses manual entry for the Book ID.
- */
 public class BookFormController {
 
-    // FXML UI Components
     @FXML private TextField txtBookId;
     @FXML private TextField txtIsbn;
     @FXML private TextField txtTitle;
@@ -37,25 +32,22 @@ public class BookFormController {
     @FXML private TableColumn<BookDTO, String> colAuthor;
     @FXML private TableColumn<BookDTO, Boolean> colAvailable;
 
-    // NOTE: The BookService and DAO no longer need the ID generation methods.
-    // You can remove them from those files to simplify the code.
     private final BookService bookService = new BookServiceImpl();
     private ObservableList<BookDTO> bookList;
 
     @FXML
     public void initialize() {
-        // The Book ID field is now editable by the user.
-        txtBookId.setEditable(true);
-        txtBookId.setStyle(""); // Reset style to default
+        // The Book ID field is now non-editable again.
+        txtBookId.setEditable(false);
+        txtBookId.setStyle("-fx-background-color: #e2e2e2;");
 
-        // Set up the table columns
         colBookId.setCellValueFactory(new PropertyValueFactory<>("bookId"));
         colTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         colAuthor.setCellValueFactory(new PropertyValueFactory<>("author"));
         colAvailable.setCellValueFactory(new PropertyValueFactory<>("availability"));
 
-        // Load data and set up listeners
         loadAllBooks();
+        generateAndSetNextId(); // Generate ID on startup
         setupListeners();
     }
 
@@ -71,29 +63,23 @@ public class BookFormController {
         });
     }
 
-    /**
-     * Handles the "Add Book" button click using a manually entered ID.
-     */
     @FXML
     void btnAddOnAction(ActionEvent event) {
         BookDTO newBook = readFormData();
-        if (newBook == null) return; // Validation failed
+        if (newBook == null) return;
 
         try {
             if (bookService.addBook(newBook)) {
                 showAlert(Alert.AlertType.INFORMATION, "Success", "Book added successfully!");
                 refreshView();
             } else {
-                showAlert(Alert.AlertType.ERROR, "Error", "Failed to add the book. The Book ID might already exist.");
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to add the book.");
             }
         } catch (SQLException e) {
             handleSQLException(e);
         }
     }
 
-    /**
-     * Handles the "Update Book" button click.
-     */
     @FXML
     void btnUpdateOnAction(ActionEvent event) {
         BookDTO updatedBook = readFormData();
@@ -111,14 +97,11 @@ public class BookFormController {
         }
     }
 
-    /**
-     * Handles the "Delete Book" button click.
-     */
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
         String bookId = txtBookId.getText();
-        if (bookId.isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Input Error", "Please select a book to delete.");
+        if (bookId.isEmpty() || !bookId.startsWith("B")) {
+            showAlert(Alert.AlertType.WARNING, "Selection Error", "Please select a book to delete.");
             return;
         }
 
@@ -137,6 +120,7 @@ public class BookFormController {
     @FXML
     void btnClearOnAction(ActionEvent event) {
         clearForm();
+        generateAndSetNextId(); // Generate a new ID after clearing
     }
 
     // --- Helper Methods ---
@@ -151,6 +135,14 @@ public class BookFormController {
         }
     }
 
+    private void generateAndSetNextId() {
+        try {
+            txtBookId.setText(bookService.generateNextBookId());
+        } catch (SQLException e) {
+            handleSQLException(e);
+        }
+    }
+
     private void populateForm(BookDTO book) {
         txtBookId.setText(book.getBookId());
         txtIsbn.setText(book.getIsbn());
@@ -160,12 +152,9 @@ public class BookFormController {
         chkAvailability.setSelected(book.isAvailability());
     }
 
-    /**
-     * Reads form data for both Add and Update, now including the manual Book ID.
-     */
     private BookDTO readFormData() {
         if (txtBookId.getText().isEmpty() || txtIsbn.getText().isEmpty() || txtTitle.getText().isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Validation Error", "Please fill in at least Book ID, ISBN, and Title.");
+            showAlert(Alert.AlertType.WARNING, "Validation Error", "Please fill in at least ISBN and Title.");
             return null;
         }
         return new BookDTO(
@@ -179,7 +168,7 @@ public class BookFormController {
     }
 
     private void clearForm() {
-        txtBookId.clear();
+        // Don't clear the auto-generated ID
         txtIsbn.clear();
         txtTitle.clear();
         txtAuthor.clear();
@@ -192,6 +181,7 @@ public class BookFormController {
     private void refreshView() {
         loadAllBooks();
         clearForm();
+        generateAndSetNextId();
     }
 
     private void filterBooks(String keyword) {
