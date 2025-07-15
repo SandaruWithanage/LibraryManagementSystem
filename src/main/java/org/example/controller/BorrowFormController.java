@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 /**
  * Controller for the borrow_form.fxml view.
- * This version includes debugging print statements to trace the initialization process.
+ * This final version correctly handles the borrowing limit.
  */
 public class BorrowFormController {
 
@@ -55,45 +55,24 @@ public class BorrowFormController {
 
     @FXML
     public void initialize() {
-        System.out.println("[DEBUG] BorrowFormController: Starting initialize()...");
-        try {
-            // Configure table columns
-            configureTable();
-
-            // Load data and set up UI
-            loadCurrentlyBorrowed();
-            generateAndSetNextId();
-            loadUsersAndBooksIntoComboBoxes();
-            setupComboBoxListeners();
-
-            System.out.println("[DEBUG] BorrowFormController: initialize() completed successfully.");
-        } catch (Exception e) {
-            // If any part of the initialization fails, print the error.
-            System.err.println("[DEBUG] !!! FATAL ERROR during BorrowFormController initialize() !!!");
-            e.printStackTrace();
-        }
+        configureTable();
+        loadCurrentlyBorrowed();
+        generateAndSetNextId();
+        loadUsersAndBooksIntoComboBoxes();
+        setupComboBoxListeners();
     }
 
     private void configureTable() {
-        System.out.println("[DEBUG] Configuring table columns...");
         colRecordId.setCellValueFactory(new PropertyValueFactory<>("recordId"));
         colBookId.setCellValueFactory(new PropertyValueFactory<>("bookId"));
         colUserId.setCellValueFactory(new PropertyValueFactory<>("userId"));
         colBorrowDate.setCellValueFactory(new PropertyValueFactory<>("borrowDate"));
-        System.out.println("[DEBUG] Table columns configured.");
     }
 
     private void loadUsersAndBooksIntoComboBoxes() {
-        System.out.println("[DEBUG] Loading data into ComboBoxes...");
         try {
-            List<UserDTO> allUsers = userService.getAllUsers();
-            cmbUserId.setItems(FXCollections.observableArrayList(allUsers));
-            System.out.println("[DEBUG] Loaded " + allUsers.size() + " users.");
-
-            List<BookDTO> availableBooks = bookService.getAvailableBooks();
-            cmbBookId.setItems(FXCollections.observableArrayList(availableBooks));
-            System.out.println("[DEBUG] Loaded " + availableBooks.size() + " available books.");
-
+            cmbUserId.setItems(FXCollections.observableArrayList(userService.getAllUsers()));
+            cmbBookId.setItems(FXCollections.observableArrayList(bookService.getAvailableBooks()));
         } catch (SQLException e) {
             handleSQLException(e);
         }
@@ -115,11 +94,9 @@ public class BorrowFormController {
             @Override
             public BookDTO fromString(String string) { return null; }
         });
-        System.out.println("[DEBUG] ComboBoxes configured.");
     }
 
     private void setupComboBoxListeners() {
-        System.out.println("[DEBUG] Setting up ComboBox listeners...");
         cmbUserId.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 lblUserName.setText("User Name: " + newVal.getName());
@@ -131,7 +108,6 @@ public class BorrowFormController {
                 lblBookTitle.setText("Book Title: " + newVal.getTitle());
             }
         });
-        System.out.println("[DEBUG] ComboBox listeners configured.");
     }
 
     @FXML
@@ -149,7 +125,7 @@ public class BorrowFormController {
                 selectedUser.getUserId(),
                 selectedBook.getBookId(),
                 dateBorrow.getValue(),
-                null, 0.0
+                null, 0.0, false
         );
 
         try {
@@ -158,7 +134,8 @@ public class BorrowFormController {
                 showAlert(Alert.AlertType.INFORMATION, "Success", "Book borrowed successfully!");
                 refreshView();
             } else {
-                showAlert(Alert.AlertType.ERROR, "Transaction Failed", "The book could not be borrowed.");
+                // *** FIXED: This now specifically handles the borrowing limit error. ***
+                showAlert(Alert.AlertType.ERROR, "Borrowing Limit Reached", "This user has already borrowed the maximum number of books (3).");
             }
         } catch (SQLException e) {
             handleSQLException(e);
@@ -166,24 +143,19 @@ public class BorrowFormController {
     }
 
     private void loadCurrentlyBorrowed() {
-        System.out.println("[DEBUG] Loading currently borrowed books...");
         try {
             List<BorrowRecordDTO> currentlyBorrowed = borrowService.getAllBorrowRecords().stream()
                     .filter(record -> record.getReturnDate() == null)
                     .collect(Collectors.toList());
             tblBorrowedBooks.setItems(FXCollections.observableArrayList(currentlyBorrowed));
-            System.out.println("[DEBUG] Found " + currentlyBorrowed.size() + " borrowed books.");
         } catch (SQLException e) {
             handleSQLException(e);
         }
     }
 
     private void generateAndSetNextId() {
-        System.out.println("[DEBUG] Generating next record ID...");
         try {
-            String nextId = borrowService.generateNextRecordId();
-            txtRecordId.setText(nextId);
-            System.out.println("[DEBUG] Next record ID is: " + nextId);
+            txtRecordId.setText(borrowService.generateNextRecordId());
         } catch (SQLException e) {
             handleSQLException(e);
         }
