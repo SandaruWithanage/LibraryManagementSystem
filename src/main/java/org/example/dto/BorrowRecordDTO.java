@@ -6,10 +6,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-/**
- * A Data Transfer Object (DTO) for carrying borrow record data.
- * It is a simple container used to pass information between the UI and the service layer.
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,6 +14,7 @@ public class BorrowRecordDTO {
     private String userId;
     private String bookId;
     private LocalDate borrowDate;
-    private LocalDate returnDate; // Can be null if the book has not been returned
+    private LocalDate returnDate;
     private double fine;
+    private boolean isFinePaid; // The 7th field
 }
