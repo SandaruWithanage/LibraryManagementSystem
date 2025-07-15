@@ -15,7 +15,7 @@ import java.net.URL;
 
 /**
  * Controller for the main dashboard view (dashboard.fxml).
- * This version includes improved error handling for loading FXML files.
+ * This final version handles navigation to all modules, including Reports.
  */
 public class DashboardController {
 
@@ -24,7 +24,7 @@ public class DashboardController {
 
     @FXML
     public void initialize() {
-        // Load the book form as the default view when the dashboard opens
+        // Load the book form as the default view when the dashboard opens.
         loadPage("book_form.fxml");
     }
 
@@ -40,14 +40,21 @@ public class DashboardController {
 
     @FXML
     void handleBorrowClick(ActionEvent event) {
-        // You will need to create 'borrow_form.fxml' for this to work
         loadPage("borrow_form.fxml");
     }
 
     @FXML
     void handleReturnsClick(ActionEvent event) {
-        // You will need to create 'return_form.fxml' for this to work
         loadPage("return_form.fxml");
+    }
+
+    /**
+     * Handles the "Reports" button click.
+     * This method is now implemented to load the reports view.
+     */
+    @FXML
+    void handleReportsClick(ActionEvent event) {
+        loadPage("reports_form.fxml");
     }
 
     /**
@@ -58,7 +65,7 @@ public class DashboardController {
      */
     private void loadPage(String fxmlFile) {
         try {
-            // *** CRITICAL FIX: Check if the FXML file exists before trying to load it. ***
+            // Check if the FXML file exists before trying to load it.
             URL resourceUrl = getClass().getResource("/view/" + fxmlFile);
 
             if (resourceUrl == null) {
