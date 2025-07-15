@@ -19,13 +19,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Controller for the user_form.fxml view.
- * This version uses manual entry for the User ID.
- */
 public class UserFormController {
 
-    // FXML UI Components
     @FXML private TextField txtUserId;
     @FXML private TextField txtName;
     @FXML private TextField txtContact;
@@ -38,24 +33,20 @@ public class UserFormController {
     @FXML private TableColumn<UserDTO, String> colName;
     @FXML private TableColumn<UserDTO, String> colContact;
     @FXML private TableColumn<UserDTO, String> colUsername;
+    @FXML private TableColumn<UserDTO, LocalDate> colMembershipDate;
 
-    // Service Layer for business logic
     private final UserService userService = new UserServiceImpl();
-
-    // ObservableList to hold data for the TableView
     private ObservableList<UserDTO> userList;
 
     @FXML
     public void initialize() {
-        // The User ID field is now editable for manual entry.
-        txtUserId.setEditable(true);
-        txtUserId.setStyle(""); // Reset style to default
+        // The User ID field is non-editable.
+        txtUserId.setEditable(false);
+        txtUserId.setStyle("-fx-background-color: #e2e2e2;");
 
-        // Set up the table columns to bind to UserDTO properties.
         configureTable();
-
-        // Load all users into the table and set up UI listeners.
         loadAllUsers();
+        generateAndSetNextId();
         setupListeners();
     }
 
@@ -64,45 +55,38 @@ public class UserFormController {
         colName.setCellValueFactory(new PropertyValueFactory<>("name"));
         colContact.setCellValueFactory(new PropertyValueFactory<>("contact"));
         colUsername.setCellValueFactory(new PropertyValueFactory<>("username"));
+        colMembershipDate.setCellValueFactory(new PropertyValueFactory<>("membershipDate"));
     }
 
     private void setupListeners() {
-        // Populates the form when a user clicks a row in the table.
         tblUsers.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 populateForm(newSelection);
             }
         });
 
-        // Filters the table based on search input.
         txtSearch.textProperty().addListener((obs, oldText, newText) -> {
             filterUsers(newText);
         });
     }
 
-    /**
-     * Handles the "Add User" button click with manual ID entry.
-     */
     @FXML
     void btnAddOnAction(ActionEvent event) {
         UserDTO newUser = readFormData();
-        if (newUser == null) return; // Validation failed
+        if (newUser == null) return;
 
         try {
             if (userService.addUser(newUser)) {
                 showAlert(Alert.AlertType.INFORMATION, "Success", "User added successfully!");
                 refreshView();
             } else {
-                showAlert(Alert.AlertType.ERROR, "Error", "Failed to add the user. The User ID or Username may already exist.");
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to add the user.");
             }
         } catch (SQLException e) {
             handleSQLException(e);
         }
     }
 
-    /**
-     * Handles the "Update User" button click.
-     */
     @FXML
     void btnUpdateOnAction(ActionEvent event) {
         UserDTO updatedUser = readFormData();
@@ -120,14 +104,11 @@ public class UserFormController {
         }
     }
 
-    /**
-     * Handles the "Delete User" button click.
-     */
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
         String userId = txtUserId.getText();
-        if (userId.isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Selection Error", "Please select a user from the table to delete.");
+        if (userId.isEmpty() || !userId.startsWith("U")) {
+            showAlert(Alert.AlertType.WARNING, "Selection Error", "Please select a user to delete.");
             return;
         }
 
@@ -146,6 +127,7 @@ public class UserFormController {
     @FXML
     void btnClearOnAction(ActionEvent event) {
         clearForm();
+        generateAndSetNextId();
     }
 
     // --- Helper Methods ---
@@ -160,6 +142,14 @@ public class UserFormController {
         }
     }
 
+    private void generateAndSetNextId() {
+        try {
+            txtUserId.setText(userService.generateNextUserId());
+        } catch (SQLException e) {
+            handleSQLException(e);
+        }
+    }
+
     private void populateForm(UserDTO user) {
         txtUserId.setText(user.getUserId());
         txtName.setText(user.getName());
@@ -169,13 +159,9 @@ public class UserFormController {
         txtPassword.setText(user.getPassword());
     }
 
-    /**
-     * Reads form data for both Add and Update actions.
-     * Now includes validation for the manually entered User ID.
-     */
     private UserDTO readFormData() {
-        if (txtUserId.getText().isEmpty() || txtName.getText().isEmpty() || txtUsername.getText().isEmpty() || txtPassword.getText().isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Validation Error", "Please fill in all required fields (User ID, Name, Username, Password).");
+        if (txtUserId.getText().isEmpty() || txtName.getText().isEmpty() || txtUsername.getText().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Validation Error", "Please fill in all required fields.");
             return null;
         }
         return new UserDTO(
@@ -189,7 +175,7 @@ public class UserFormController {
     }
 
     private void clearForm() {
-        txtUserId.clear();
+        // Don't clear the auto-generated ID
         txtName.clear();
         txtContact.clear();
         dateMembership.setValue(null);
@@ -202,6 +188,7 @@ public class UserFormController {
     private void refreshView() {
         loadAllUsers();
         clearForm();
+        generateAndSetNextId();
     }
 
     private void filterUsers(String keyword) {
