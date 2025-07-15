@@ -6,10 +6,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-/**
- * Represents a BorrowRecord entity, directly mapping to the 'borrow_records' table.
- * The fields in this class correspond to the columns in the table.
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,4 +16,5 @@ public class BorrowRecord {
     private LocalDate borrowDate;
     private LocalDate returnDate;
     private double fine;
+    private boolean isFinePaid; // The 7th field
 }
