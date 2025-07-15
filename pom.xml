@@ -90,7 +90,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>org.example.AppInitializer</mainClass>
+                    <mainClass>org.example.launcher.AppInitializer</mainClass>
                     <!-- CRITICAL FIX: Add JVM arguments to open JavaFX internals to JFoenix -->
                     <options>
                         <option>--add-opens</option>
