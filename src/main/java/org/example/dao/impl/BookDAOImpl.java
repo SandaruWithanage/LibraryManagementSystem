@@ -13,11 +13,6 @@ import java.util.List;
 
 public class BookDAOImpl implements BookDAO {
 
-    // --- All existing methods (save, update, delete, findById, findAll, generateNextId) remain here ---
-
-    /**
-     * New method to fetch only available books from the database.
-     */
     @Override
     public List<Book> findAvailableBooks() throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
