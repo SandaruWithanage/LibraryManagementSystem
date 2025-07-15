@@ -14,14 +14,8 @@ public class BookServiceImpl implements BookService {
 
     private final BookDAO bookDAO = new BookDAOImpl();
 
-    // --- All existing methods (addBook, updateBook, deleteBook, etc.) remain here ---
-
-    /**
-     * Implements the logic to get available books by calling the DAO.
-     */
     @Override
     public List<BookDTO> getAvailableBooks() throws SQLException {
-        // Calls the new method in the DAO and maps the results to DTOs.
         return bookDAO.findAvailableBooks().stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
