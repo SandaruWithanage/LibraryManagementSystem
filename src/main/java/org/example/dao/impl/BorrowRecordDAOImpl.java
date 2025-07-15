@@ -14,10 +14,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The concrete implementation of the BorrowRecordDAO interface using JDBC.
+ * The concrete implementation of the BorrowRecordDAO interface.
+ * This version includes the logic to count active loans.
  */
 public class BorrowRecordDAOImpl implements BorrowRecordDAO {
 
+    // --- All existing save, update, findById, findAll, generateNextId methods remain here ---
+
+    /**
+     * New method to count active loans for a specific user.
+     */
+    @Override
+    public int getActiveBorrowCountForUser(String userId) throws SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
+        // This query counts all records for a user where the book has not been returned.
+        String sql = "SELECT COUNT(*) FROM borrow_records WHERE user_id = ? AND return_date IS NULL";
+        try (PreparedStatement pstm = connection.prepareStatement(sql)) {
+            pstm.setString(1, userId);
+            try (ResultSet resultSet = pstm.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1); // Return the count
+                }
+            }
+        }
+        return 0; // Return 0 if user has no active loans
+    }
+
+    // --- All other methods from the previous version remain unchanged ---
     @Override
     public boolean save(BorrowRecord record) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
