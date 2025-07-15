@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 /**
  * The concrete implementation of the ReportService interface.
- * It uses existing DAOs to fetch and process data for various reports.
+ * This version is updated to use the correct DTO constructor.
  */
 public class ReportServiceImpl implements ReportService {
 
@@ -30,7 +30,6 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public List<BookDTO> getAvailableBooks() throws SQLException {
-        // We can reuse the existing method from BookDAO for this.
         List<Book> availableBooks = bookDAO.findAvailableBooks();
         return availableBooks.stream()
                 .map(this::mapToBookDTO)
@@ -39,7 +38,6 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public List<BorrowRecordDTO> getBorrowedBooks() throws SQLException {
-        // Fetch all records and filter in Java to find those not yet returned.
         return borrowRecordDAO.findAll().stream()
                 .filter(record -> record.getReturnDate() == null)
                 .map(this::mapToBorrowDTO)
@@ -48,15 +46,12 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public List<BorrowRecordDTO> getOverdueBooks() throws SQLException {
-        // Fetch all records, filter for overdue ones, and calculate the current fine.
         return borrowRecordDAO.findAll().stream()
                 .filter(record -> record.getReturnDate() == null && isOverdue(record.getBorrowDate()))
                 .map(record -> {
-                    // Calculate the fine for the report
                     long overdueDays = ChronoUnit.DAYS.between(record.getBorrowDate().plusDays(LENDING_PERIOD_DAYS), LocalDate.now());
                     double fine = overdueDays * FINE_PER_DAY;
 
-                    // Create a DTO and set the calculated fine
                     BorrowRecordDTO dto = mapToBorrowDTO(record);
                     dto.setFine(fine);
                     return dto;
@@ -64,19 +59,11 @@ public class ReportServiceImpl implements ReportService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * A helper method to check if a loan is overdue based on the current date.
-     * @param borrowDate The date the book was borrowed.
-     * @return true if the book is overdue, false otherwise.
-     */
     private boolean isOverdue(LocalDate borrowDate) {
         long daysBorrowed = ChronoUnit.DAYS.between(borrowDate, LocalDate.now());
         return daysBorrowed > LENDING_PERIOD_DAYS;
     }
 
-    /**
-     * A helper method to map a Book entity to its DTO.
-     */
     private BookDTO mapToBookDTO(Book entity) {
         return new BookDTO(
                 entity.getBookId(),
@@ -90,6 +77,7 @@ public class ReportServiceImpl implements ReportService {
 
     /**
      * A helper method to map a BorrowRecord entity to its DTO.
+     * *** FIXED: This now correctly uses the 7-argument constructor. ***
      */
     private BorrowRecordDTO mapToBorrowDTO(BorrowRecord entity) {
         return new BorrowRecordDTO(
@@ -98,7 +86,8 @@ public class ReportServiceImpl implements ReportService {
                 entity.getBookId(),
                 entity.getBorrowDate(),
                 entity.getReturnDate(),
-                entity.getFine()
+                entity.getFine(),
+                entity.isFinePaid() // The 7th argument
         );
     }
 }
