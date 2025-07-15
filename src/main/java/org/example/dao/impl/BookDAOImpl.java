@@ -13,7 +13,7 @@ import java.util.List;
 
 public class BookDAOImpl implements BookDAO {
 
-    // ... (All existing save, update, delete, findById, findAll methods remain here) ...
+    // --- All existing methods (save, update, delete, findById, findAll, generateNextId) remain here ---
 
     /**
      * New method to fetch only available books from the database.
@@ -40,6 +40,23 @@ public class BookDAOImpl implements BookDAO {
     }
 
     // --- All other methods from the previous version remain unchanged ---
+    @Override
+    public String generateNextId() throws SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
+        String sql = "SELECT book_id FROM books ORDER BY CAST(SUBSTRING(book_id, 2) AS UNSIGNED) DESC LIMIT 1";
+        try (PreparedStatement pstm = connection.prepareStatement(sql)) {
+            ResultSet resultSet = pstm.executeQuery();
+            if (resultSet.next()) {
+                String lastId = resultSet.getString(1);
+                int num = Integer.parseInt(lastId.substring(1));
+                num++;
+                return String.format("B%03d", num);
+            } else {
+                return "B001";
+            }
+        }
+    }
+
     @Override
     public boolean save(Book book) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
