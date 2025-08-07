@@ -12,57 +12,67 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="640.0" prefWidth="950.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controller.ReturnFormController">
+<AnchorPane prefHeight="640.0" prefWidth="950.0"
+            style="-fx-background-color: #f4f7f6;"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.controller.ReturnFormController">
+
     <children>
+        <!-- Page Title -->
         <Label layoutX="30.0" layoutY="20.0" text="Returns &amp; Fines">
             <font>
-                <Font name="System Bold" size="24.0" />
+                <Font name="System Bold" size="24.0"/>
             </font>
         </Label>
 
-        <!-- Table now displays all borrow records for context -->
+        <!-- Borrow Records Table -->
         <VBox layoutX="30.0" layoutY="70.0" prefHeight="540.0" prefWidth="600.0" spacing="10.0">
             <children>
-                <Label text="Select a record to process:">
-                    <font>
-                        <Font name="System Semibold" size="14.0" />
-                    </font>
-                </Label>
+                <Label text="📋 Select a record to process:" style="-fx-font-size: 14px; -fx-text-fill: #2F3E2E; -fx-font-weight: bold;" />
                 <TableView fx:id="tblBorrowRecords" prefHeight="500.0">
                     <columns>
-                        <TableColumn fx:id="colRecordId" prefWidth="90.0" text="Record ID" />
-                        <TableColumn fx:id="colBookId" prefWidth="90.0" text="Book ID" />
-                        <TableColumn fx:id="colUserId" prefWidth="90.0" text="User ID" />
-                        <TableColumn fx:id="colBorrowDate" prefWidth="120.0" text="Borrow Date" />
-                        <TableColumn fx:id="colReturnDate" prefWidth="120.0" text="Return Date" />
-                        <TableColumn fx:id="colFine" prefWidth="90.0" text="Fine (Rs.)" />
+                        <TableColumn fx:id="colRecordId" prefWidth="90.0" text="Record ID"/>
+                        <TableColumn fx:id="colBookId" prefWidth="90.0" text="Book ID"/>
+                        <TableColumn fx:id="colUserId" prefWidth="90.0" text="User ID"/>
+                        <TableColumn fx:id="colBorrowDate" prefWidth="120.0" text="Borrow Date"/>
+                        <TableColumn fx:id="colReturnDate" prefWidth="120.0" text="Return Date"/>
+                        <TableColumn fx:id="colFine" prefWidth="90.0" text="Fine (Rs.)"/>
                     </columns>
                 </TableView>
             </children>
         </VBox>
 
-        <!-- Form for Processing Actions -->
-        <VBox layoutX="660.0" layoutY="70.0" prefWidth="260.0" spacing="20.0" style="-fx-background-color: #f4f7f6; -fx-border-color: #dcdcdc; -fx-border-width: 1;">
+        <!-- Action Form Panel -->
+        <VBox layoutX="660.0" layoutY="70.0" prefWidth="260.0" spacing="20.0"
+              style="-fx-background-color: #D9EAD3; -fx-border-color: #A7C4A0; -fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8;">
             <padding>
-                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
             </padding>
             <children>
-                <Label text="Process Action">
-                    <font>
-                        <Font name="System Bold" size="18.0" />
-                    </font>
-                </Label>
+                <Label text="🛠️ Process Action" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2F3E2E;" />
+
                 <DatePicker fx:id="dateReturn" prefWidth="220.0" promptText="Select Return Date" />
-                <VBox>
+
+                <VBox spacing="5.0">
                     <children>
-                        <Label text="Calculated Fine (Rs.)" />
-                        <TextField fx:id="txtFine" editable="false" promptText="0.00" style="-fx-background-color: #e2e2e2;" />
+                        <Label text="💰 Calculated Fine (Rs.):" style="-fx-text-fill: #333;" />
+                        <TextField fx:id="txtFine" editable="false" promptText="0.00"
+                                   style="-fx-background-color: #e2e2e2; -fx-font-weight: bold;" />
                     </children>
                 </VBox>
-                <Button fx:id="btnConfirmReturn" mnemonicParsing="false" onAction="#btnConfirmReturnOnAction" prefHeight="40.0" prefWidth="220.0" style="-fx-background-color: #2980b9; -fx-text-fill: white;" text="Confirm Return" />
 
-                <!-- *** ADDED: The "Mark as Paid" button *** -->
-                <Button fx:id="btnPayFine" mnemonicParsing="false" onAction="#btnPayFineOnAction" prefHeight="40.0" prefWidth="220.0" style="-fx-background-color: #27ae60; -fx-text-fill: white;" text="Mark as Paid" />
+                <Button fx:id="btnConfirmReturn"
+                        onAction="#btnConfirmReturnOnAction"
+                        text="Confirm Return"
+                        styleClass="form-button"
+                        prefHeight="40.0" prefWidth="220.0" />
+
+                <Button fx:id="btnPayFine"
+                        onAction="#btnPayFineOnAction"
+                        text="Mark as Paid"
+                        styleClass="form-button"
+                        prefHeight="40.0" prefWidth="220.0" />
             </children>
         </VBox>
     </children>
