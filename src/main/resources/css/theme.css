@@ -1,0 +1,63 @@
+/* theme.css */
+
+/* Apply font and base background */
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-background-color: #F0E3D7;
+}
+
+/* Label styling */
+.label {
+    -fx-text-fill: #4A7C2A;
+    -fx-font-size: 20px;
+}
+
+/* Input Fields (TextField, PasswordField) */
+.text-field,
+.password-field {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #B7C9B2;
+    -fx-border-width: 1;
+    -fx-padding: 8 12;
+    -fx-font-size: 14px;
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #4A7C2A;
+}
+
+.text-field:focused,
+.password-field:focused {
+    -fx-border-color: #4A7C2A;
+    -fx-effect: dropshadow(three-pass-box, rgba(74,124,42,0.3), 5, 0, 0, 2);
+}
+
+/* Primary Button */
+.button {
+    -fx-background-color: #4A7C2A;
+    -fx-text-fill: white;
+    -fx-background-radius: 10;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 3, 0.1, 0, 2);
+    -fx-padding: 10 20;
+}
+
+/* Hover effect */
+.button:hover {
+    -fx-background-color: #A8D8B9;
+    -fx-text-fill: #2b3e1f;
+}
+
+/* Pressed effect */
+.button:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+/* Optional styling for login VBox container */
+.vbox {
+    -fx-background-color: #D1E8D2;
+    -fx-background-radius: 15;
+    -fx-padding: 30;
+}
