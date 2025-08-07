@@ -49,18 +49,19 @@
                                 <!-- Buttons Row 1 -->
                                 <HBox spacing="15.0" alignment="CENTER_LEFT">
                                     <children>
-                                        <Button fx:id="btnAdd" onAction="#btnAddOnAction" text="Add Book" minWidth="90" />
-                                        <Button fx:id="btnUpdate" onAction="#btnUpdateOnAction" text="Update Book" minWidth="100" />
+                                        <Button fx:id="btnAdd" onAction="#btnAddOnAction" text="Add Book" minWidth="90" styleClass="form-button"/>
+                                        <Button fx:id="btnUpdate" onAction="#btnUpdateOnAction" text="Update Book" minWidth="100" styleClass="form-button"/>
                                     </children>
                                 </HBox>
 
                                 <!-- Buttons Row 2 -->
                                 <HBox spacing="15.0" alignment="CENTER_LEFT">
                                     <children>
-                                        <Button fx:id="btnDelete" onAction="#btnDeleteOnAction" text="Delete Book" minWidth="100" />
-                                        <Button fx:id="btnClear" onAction="#btnClearOnAction" text="Clear" minWidth="80" />
+                                        <Button fx:id="btnDelete" onAction="#btnDeleteOnAction" text="Delete Book" minWidth="100" styleClass="form-button"/>
+                                        <Button fx:id="btnClear" onAction="#btnClearOnAction" text="Clear" minWidth="80" styleClass="form-button"/>
                                     </children>
                                 </HBox>
+
                             </children>
                         </VBox>
 
