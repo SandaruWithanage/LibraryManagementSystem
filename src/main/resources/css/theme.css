@@ -31,33 +31,46 @@
     -fx-effect: dropshadow(three-pass-box, rgba(74,124,42,0.3), 5, 0, 0, 2);
 }
 
-/* 🌿 Primary Button - Serene and Light */
-.button {
-    -fx-background-color: #CFE8D7;          /* Softer green */
-    -fx-text-fill: #2F3E2E;                /* Soft charcoal */
-    -fx-background-radius: 12px;
-    -fx-font-size: 14px;
+/* 🟩 DASHBOARD Sidebar Button */
+.dashboard-button {
+    -fx-background-color: #6FA676;
+    -fx-text-fill: white;
     -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-background-radius: 10px;
+    -fx-cursor: hand;
+    -fx-padding: 10 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 2, 0.1, 0, 1);
+}
+.dashboard-button:hover {
+    -fx-background-color: #8DBB91;
+}
+.dashboard-button:pressed {
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+    -fx-background-color: #5D9364;
+}
+
+/* 🌿 FORM Buttons (Add, Update, etc.) */
+.form-button {
+    -fx-background-color: #CFE8D7;
+    -fx-text-fill: #2F3E2E;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-background-radius: 10px;
     -fx-cursor: hand;
     -fx-padding: 10 20;
     -fx-border-color: #B7C9B2;
     -fx-border-width: 1;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 3, 0.1, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0.1, 0, 1);
 }
-
-/* Hover effect */
-.button:hover {
-    -fx-background-color: #E0F1E5;         /* Even lighter on hover */
-    -fx-text-fill: #2F3E2E;
+.form-button:hover {
+    -fx-background-color: #E0F1E5;
 }
-
-/* Pressed effect */
-.button:pressed {
-    -fx-scale-x: 0.98;
-    -fx-scale-y: 0.98;
+.form-button:pressed {
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
     -fx-background-color: #B7D7BF;
-}
-
 }
 
 /* Optional styling for login VBox container */
