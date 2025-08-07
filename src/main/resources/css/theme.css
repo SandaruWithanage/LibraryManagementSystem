@@ -133,3 +133,6 @@
     -fx-padding: 0 6 0 6;
     -fx-font-size: 13px;
 }
+.book-table .filler {
+    -fx-background-color: transparent;
+}
