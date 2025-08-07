@@ -41,13 +41,27 @@
                 </Label>
 
                 <!-- Navigation Buttons -->
-                <JFXButton fx:id="btnBooks" onAction="#handleBooksClick" prefHeight="50.0" prefWidth="250.0" text="Books" textFill="WHITE" />
-                <JFXButton fx:id="btnUsers" onAction="#handleUsersClick" prefHeight="50.0" prefWidth="250.0" text="Users" textFill="WHITE" />
-                <JFXButton fx:id="btnBorrow" onAction="#handleBorrowClick" prefHeight="50.0" prefWidth="250.0" text="Borrow Records" textFill="WHITE" />
-                <JFXButton fx:id="btnReturns" onAction="#handleReturnsClick" prefHeight="50.0" prefWidth="250.0" text="Returns &amp; Fines" textFill="WHITE" />
+                <JFXButton fx:id="btnBooks" onAction="#handleBooksClick"
+                           prefHeight="50.0" prefWidth="250.0"
+                           text="Books" styleClass="dashboard-button"/>
+
+                <JFXButton fx:id="btnUsers" onAction="#handleUsersClick"
+                           prefHeight="50.0" prefWidth="250.0"
+                           text="Users" styleClass="dashboard-button"/>
+
+                <JFXButton fx:id="btnBorrow" onAction="#handleBorrowClick"
+                           prefHeight="50.0" prefWidth="250.0"
+                           text="Borrow Records" styleClass="dashboard-button"/>
+
+                <JFXButton fx:id="btnReturns" onAction="#handleReturnsClick"
+                           prefHeight="50.0" prefWidth="250.0"
+                           text="Returns &amp; Fines" styleClass="dashboard-button"/>
 
                 <!-- *** ADDED: The "Reports" button *** -->
-                <JFXButton fx:id="btnReports" onAction="#handleReportsClick" prefHeight="50.0" prefWidth="250.0" text="Reports" textFill="WHITE" />
+                <JFXButton fx:id="btnReports" onAction="#handleReportsClick"
+                           prefHeight="50.0" prefWidth="250.0"
+                           text="Reports" styleClass="dashboard-button"/>
+
             </children>
         </VBox>
     </left>
