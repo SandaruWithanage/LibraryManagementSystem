@@ -11,36 +11,34 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="640.0" prefWidth="950.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controller.BorrowFormController">
+<AnchorPane prefHeight="640.0" prefWidth="950.0"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.controller.BorrowFormController"
+            styleClass="bg-serene">
+
     <children>
-        <Label layoutX="30.0" layoutY="20.0" text="Borrow Management">
-            <font>
-                <Font name="System Bold" size="24.0" />
-            </font>
-        </Label>
+        <!-- Title with style -->
+        <Label layoutX="30.0" layoutY="20.0" text="📖 Borrow Management" styleClass="header-title" />
 
-        <!-- Form Fields now use ComboBoxes for selection -->
+        <!-- Form Fields with ComboBoxes -->
         <VBox layoutX="30.0" layoutY="70.0" prefWidth="400.0" spacing="15.0">
             <children>
-                <TextField fx:id="txtRecordId" editable="false" promptText="Record ID (Auto-Generated)" style="-fx-background-color: #e2e2e2;" />
+                <TextField fx:id="txtRecordId"
+                           editable="false"
+                           promptText="Record ID (Auto-Generated)"
+                           style="-fx-background-color: #e2e2e2;" />
 
-                <!-- ComboBox for selecting a User -->
                 <ComboBox fx:id="cmbUserId" prefWidth="400.0" promptText="Select User..." />
                 <Label fx:id="lblUserName" text="User Name: -" />
 
-                <!-- ComboBox for selecting a Book -->
                 <ComboBox fx:id="cmbBookId" prefWidth="400.0" promptText="Select Available Book..." />
                 <Label fx:id="lblBookTitle" text="Book Title: -" />
 
                 <DatePicker fx:id="dateBorrow" prefWidth="400.0" promptText="Borrow Date" />
-            </children>
-        </VBox>
 
-        <!-- Aligned Action Button Like Book/User -->
-        <VBox layoutX="30.0" layoutY="420.0" spacing="10.0">
-            <children>
+                <!-- Styled Action Button Section -->
                 <HBox spacing="15.0" alignment="CENTER_LEFT">
                     <children>
                         <Button fx:id="btnConfirmBorrow"
@@ -53,16 +51,11 @@
             </children>
         </VBox>
 
-
-        <!-- Table for Displaying Currently Borrowed Books -->
+        <!-- Table Section -->
         <VBox layoutX="480.0" layoutY="70.0" prefHeight="540.0" prefWidth="440.0" spacing="10.0">
             <children>
-                <Label text="Currently Borrowed Books">
-                    <font>
-                        <Font name="System Semibold" size="16.0" />
-                    </font>
-                </Label>
-                <TableView fx:id="tblBorrowedBooks" prefHeight="500.0">
+                <Label text="Currently Borrowed Books" styleClass="dashboard-title" />
+                <TableView fx:id="tblBorrowedBooks" prefHeight="500.0" styleClass="book-table">
                     <columns>
                         <TableColumn fx:id="colRecordId" prefWidth="90.0" text="Record ID" />
                         <TableColumn fx:id="colBookId" prefWidth="90.0" text="Book ID" />
