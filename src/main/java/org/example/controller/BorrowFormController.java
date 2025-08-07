@@ -99,13 +99,19 @@ public class BorrowFormController {
     private void setupComboBoxListeners() {
         cmbUserId.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
-                lblUserName.setText("User Name: " + newVal.getName());
+                lblUserName.setText("👤 Name: " + newVal.getName());
+                lblUserName.setStyle("-fx-font-size: 14px; -fx-text-fill: #2F3E2E; -fx-font-weight: bold;");
+            } else {
+                lblUserName.setText("👤 Name: -");
             }
         });
 
         cmbBookId.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
-                lblBookTitle.setText("Book Title: " + newVal.getTitle());
+                lblBookTitle.setText("📚 Title: " + newVal.getTitle());
+                lblBookTitle.setStyle("-fx-font-size: 14px; -fx-text-fill: #2F3E2E; -fx-font-weight: bold;");
+            } else {
+                lblBookTitle.setText("📚 Title: -");
             }
         });
     }
