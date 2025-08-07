@@ -31,28 +31,33 @@
     -fx-effect: dropshadow(three-pass-box, rgba(74,124,42,0.3), 5, 0, 0, 2);
 }
 
-/* Primary Button */
+/* 🌿 Primary Button - Serene and Light */
 .button {
-    -fx-background-color: #4A7C2A;
-    -fx-text-fill: white;
-    -fx-background-radius: 10;
+    -fx-background-color: #CFE8D7;          /* Softer green */
+    -fx-text-fill: #2F3E2E;                /* Soft charcoal */
+    -fx-background-radius: 12px;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 3, 0.1, 0, 2);
     -fx-padding: 10 20;
+    -fx-border-color: #B7C9B2;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 3, 0.1, 0, 2);
 }
 
 /* Hover effect */
 .button:hover {
-    -fx-background-color: #A8D8B9;
-    -fx-text-fill: #2b3e1f;
+    -fx-background-color: #E0F1E5;         /* Even lighter on hover */
+    -fx-text-fill: #2F3E2E;
 }
 
 /* Pressed effect */
 .button:pressed {
     -fx-scale-x: 0.98;
     -fx-scale-y: 0.98;
+    -fx-background-color: #B7D7BF;
+}
+
 }
 
 /* Optional styling for login VBox container */
