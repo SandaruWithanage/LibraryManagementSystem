@@ -111,3 +111,21 @@
 .book-table .table-row-cell:filled:selected {
     -fx-background-color: #C9DBC8;
 }
+/* 🟢 Table header row: minimized height and spacing */
+.book-table .column-header-background {
+    -fx-background-color: #B7C9B2;
+    -fx-background-insets: 0;
+    -fx-padding: 2 0 2 0; /* top right bottom left */
+}
+
+.book-table .column-header {
+    -fx-pref-height: 24px; /* reduce height */
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2F3E2E;
+}
+
+/* 🟢 Remove extra gaps from TableColumn headers */
+.book-table .label {
+    -fx-padding: 0 4 0 4;
+}
