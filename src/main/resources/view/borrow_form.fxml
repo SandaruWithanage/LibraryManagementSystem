@@ -38,12 +38,21 @@
             </children>
         </VBox>
 
-        <!-- Action Button -->
-        <HBox layoutX="30.0" layoutY="380.0">
+        <!-- Aligned Action Button Like Book/User -->
+        <VBox layoutX="30.0" layoutY="420.0" spacing="10.0">
             <children>
-                <Button fx:id="btnConfirmBorrow" mnemonicParsing="false" onAction="#btnConfirmBorrowOnAction" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #2980b9; -fx-text-fill: white;" text="Confirm Borrow" />
+                <HBox spacing="15.0" alignment="CENTER_LEFT">
+                    <children>
+                        <Button fx:id="btnConfirmBorrow"
+                                onAction="#btnConfirmBorrowOnAction"
+                                text="Confirm Borrow"
+                                styleClass="form-button"
+                                minWidth="140" />
+                    </children>
+                </HBox>
             </children>
-        </HBox>
+        </VBox>
+
 
         <!-- Table for Displaying Currently Borrowed Books -->
         <VBox layoutX="480.0" layoutY="70.0" prefHeight="540.0" prefWidth="440.0" spacing="10.0">
