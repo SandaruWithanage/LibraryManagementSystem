@@ -61,3 +61,53 @@
     -fx-background-radius: 15;
     -fx-padding: 30;
 }
+.bg-serene {
+    -fx-background-color: #F4F9F4;
+}
+.header-title {
+    -fx-font-family: 'Segoe UI Semibold';
+    -fx-font-size: 28px;
+    -fx-text-fill: #2F3E2E; /* Soft dark green/charcoal */
+}
+/* Search field */
+.search-bar {
+    -fx-background-color: white;
+    -fx-prompt-text-fill: #9DA39A;
+    -fx-font-size: 14px;
+    -fx-padding: 8px;
+    -fx-background-radius: 8px;
+    -fx-border-color: #D2E3D1;
+    -fx-border-radius: 8px;
+}
+
+/* TableView styling */
+.book-table {
+    -fx-background-color: #F4F9F4;
+    -fx-table-cell-border-color: transparent;
+    -fx-padding: 5px;
+    -fx-border-color: #DCEAD8;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-font-size: 14px;
+}
+
+/* Header styling */
+.book-table .column-header-background {
+    -fx-background-color: #B7C9B2;
+    -fx-background-radius: 10px 10px 0 0;
+}
+
+.book-table .table-column {
+    -fx-alignment: CENTER_LEFT;
+}
+
+/* Row hover effect */
+.book-table .table-row-cell:hover {
+    -fx-background-color: #E9F3E8;
+    -fx-cursor: hand;
+}
+
+/* Selected row */
+.book-table .table-row-cell:filled:selected {
+    -fx-background-color: #C9DBC8;
+}
