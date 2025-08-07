@@ -111,21 +111,25 @@
 .book-table .table-row-cell:filled:selected {
     -fx-background-color: #C9DBC8;
 }
-/* 🟢 Table header row: minimized height and spacing */
-.book-table .column-header-background {
-    -fx-background-color: #B7C9B2;
-    -fx-background-insets: 0;
-    -fx-padding: 2 0 2 0; /* top right bottom left */
-}
-
+/* 🟢 Minimize Table Header Height */
 .book-table .column-header {
-    -fx-pref-height: 24px; /* reduce height */
-    -fx-font-size: 12px;
+    -fx-pref-height: 24px; /* reduce total header height */
+    -fx-font-size: 13px;
     -fx-font-weight: bold;
     -fx-text-fill: #2F3E2E;
+    -fx-padding: 0 4 0 4;
 }
 
-/* 🟢 Remove extra gaps from TableColumn headers */
+/* 🟢 Tighten Header Background Padding */
+.book-table .column-header-background {
+    -fx-background-color: #B7C9B2;
+    -fx-background-radius: 10px 10px 0 0;
+    -fx-padding: 2 0 2 0; /* top right bottom left */
+    -fx-border-color: transparent;
+}
+
+/* 🟢 Remove extra spacing from header labels */
 .book-table .label {
-    -fx-padding: 0 4 0 4;
+    -fx-padding: 0 6 0 6;
+    -fx-font-size: 13px;
 }
