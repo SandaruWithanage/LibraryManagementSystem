@@ -29,15 +29,27 @@
             </children>
         </VBox>
 
-        <!-- Action Buttons (Styled Consistently) -->
-        <HBox layoutX="30.0" layoutY="420.0" spacing="15.0">
+        <!-- Updated Action Buttons (Vertical Like Book Form) -->
+        <VBox layoutX="30.0" layoutY="420.0" spacing="10.0">
             <children>
-                <Button fx:id="btnAdd" onAction="#btnAddOnAction" text="Add User" styleClass="form-button" />
-                <Button fx:id="btnUpdate" onAction="#btnUpdateOnAction" text="Update User" styleClass="form-button" />
-                <Button fx:id="btnDelete" onAction="#btnDeleteOnAction" text="Delete User" styleClass="form-button" />
-                <Button fx:id="btnClear" onAction="#btnClearOnAction" text="Clear" styleClass="form-button" />
+                <!-- Row 1 -->
+                <HBox spacing="15.0" alignment="CENTER_LEFT">
+                    <children>
+                        <Button fx:id="btnAdd" onAction="#btnAddOnAction" text="Add User" styleClass="form-button" />
+                        <Button fx:id="btnUpdate" onAction="#btnUpdateOnAction" text="Update User" styleClass="form-button" />
+                        <Button fx:id="btnDelete" onAction="#btnDeleteOnAction" text="Delete User" styleClass="form-button" />
+                    </children>
+                </HBox>
+
+                <!-- Row 2 -->
+                <HBox spacing="15.0" alignment="CENTER_LEFT">
+                    <children>
+                        <Button fx:id="btnClear" onAction="#btnClearOnAction" text="Clear" styleClass="form-button" />
+                    </children>
+                </HBox>
             </children>
-        </HBox>
+        </VBox>
+
 
         <!-- Table for Displaying Users -->
         <VBox layoutX="480.0" layoutY="70.0" prefHeight="540.0" prefWidth="440.0" spacing="10.0">
