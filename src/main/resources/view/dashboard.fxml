@@ -24,19 +24,17 @@
     <left>
         <VBox alignment="TOP_CENTER" prefWidth="250.0" spacing="10.0" style="-fx-background-color: #B7C9B2;" BorderPane.alignment="CENTER">
             <children>
-                <!-- Logo and Title -->
-                <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                <!-- Modern Logo and Styled Title -->
+                <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <Image url="/view/assets/images/logo.png" />
+                        <Image url="/view/assets/images/library-modern.png" />
                     </image>
                     <VBox.margin>
-                        <Insets bottom="10.0" top="30.0" />
+                        <Insets top="40.0" bottom="10.0" />
                     </VBox.margin>
                 </ImageView>
-                <Label text="BookLib Admin" textFill="WHITE">
-                    <font>
-                        <Font name="System Bold" size="20.0" />
-                    </font>
+
+                <Label text="BookLib Admin" styleClass="dashboard-title">
                     <VBox.margin>
                         <Insets bottom="30.0" />
                     </VBox.margin>
@@ -56,6 +54,8 @@
 
     <!-- Main Content Area -->
     <center>
-        <StackPane fx:id="contentArea" style="-fx-background-color: #ffffff;" BorderPane.alignment="CENTER" />
+        <StackPane fx:id="contentArea"
+                   style="-fx-background-color: #F4F9F4;"
+                   BorderPane.alignment="CENTER" />
     </center>
 </BorderPane>
