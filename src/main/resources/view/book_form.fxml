@@ -10,24 +10,23 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.example.controller.BookFormController"
             stylesheets="@../css/theme.css"
-            style="-fx-background-color: #F4F9F4;">
+            styleClass="bg-serene">
 
-
-<children>
+    <children>
         <BorderPane AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
                     AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
 
             <!-- Top Title -->
             <top>
-                <Label text="Book Management" BorderPane.alignment="CENTER">
-                    <font>
-                        <Font name="System Bold" size="26.0" />
-                    </font>
+                <Label text="📚 Book Management"
+                       styleClass="header-title"
+                       BorderPane.alignment="CENTER">
                     <BorderPane.margin>
                         <Insets top="20" bottom="10" left="30" />
                     </BorderPane.margin>
                 </Label>
             </top>
+
 
             <!-- Center Content Area -->
             <center>
@@ -68,7 +67,13 @@
                         <!-- Book Table Section -->
                         <VBox spacing="10.0" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
                             <children>
-                                <TextField fx:id="txtSearch" promptText="Search by Title or ID..." />
+
+                                <!-- Styled Search Field -->
+                                <TextField fx:id="txtSearch"
+                                           promptText="Search by Title or ID..."
+                                           styleClass="search-bar" />
+
+                                <!-- Styled TableView -->
                                 <TableView fx:id="tblBooks"
                                            VBox.vgrow="ALWAYS"
                                            fixedCellSize="40"
@@ -80,9 +85,9 @@
                                         <TableColumn fx:id="colAvailable" prefWidth="100.0" text="Available"/>
                                     </columns>
                                 </TableView>
-
                             </children>
                         </VBox>
+
 
                     </children>
                 </HBox>
